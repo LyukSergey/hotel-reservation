@@ -103,80 +103,11 @@
             </exclusions>
         </dependency>
     </dependencies>
-    <profiles>
-        <profile>
-            <id>docker-image-creator</id>
-            <activation>
-                <property>
-                    <name>docker</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-                        <version>${docker.maven.plugin}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <verbose>true</verbose>
-                            <images>
-                                <image>
-                                    <name>${project.artifactId}</name>
-                                    <build>
-                                        <from>java:8-jdk-alpine</from>
-                                        <entryPoint>
-                                            <exec>
-                                                <args>java</args>
-                                                <args>-jar</args>
-                                                <args>/maven/${project.artifactId}-${project.version}.jar</args>
-                                            </exec>
-                                        </entryPoint>
-                                        <assembly>
-                                            <descriptorRef>artifact</descriptorRef>
-                                        </assembly>
-                                    </build>
-                                </image>
-                            </images>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>build</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.coderplus.maven.plugins</groupId>
-                <artifactId>copy-rename-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-file</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <sourceFile>target/${project.artifactId}-${project.version}.jar</sourceFile>
-                            <destinationFile>docker_config/app/${project.artifactId}-${project.version}.jar
-                            </destinationFile>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

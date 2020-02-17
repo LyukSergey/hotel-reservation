@@ -3,9 +3,6 @@ services:
   postgres:
     image: postgres:11.1
     restart: always
-    volumes:
-      - ./docker_config/db/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
-      - ./docker_config/db/data.sql:/docker-entrypoint-initdb.d/2-data.sql
     environment:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_USER=postgres
@@ -17,7 +14,8 @@ services:
     networks:
       - iqs_net
   app:
-    build: ./docker_config/app/
+    build: .
+    image: hotel-reservation
     ports:
       - 8080:8080
     depends_on:
