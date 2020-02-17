@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <reservation first_name="first_name1" last_name="last_name1" room_number="1" start_date="2020-01-30"
+                 end_date="2020-02-31"/>
+    <reservation first_name="first_name1" last_name="last_name1" room_number="1" start_date="2020-02-01"
+                 end_date="2020-02-13"/>
+    <reservation first_name="first_name2" last_name="last_name2" room_number="2" start_date="2020-02-11"
+                 end_date="2020-02-23"/>
+    <reservation first_name="first_name3" last_name="last_name3" room_number="3" start_date="2020-02-22"
+                 end_date="2020-03-01"/>
+    <reservation first_name="first_name4" last_name="last_name4" room_number="5" start_date="2020-03-01"
+                 end_date="2020-03-02"/>
+</dataset>
