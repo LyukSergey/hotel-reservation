@@ -97,7 +97,7 @@ class ReservationServiceTest extends BaseIntegrationTest {
         //THEN exception
         assertThatThrownBy(() -> reservationService.findById(3L))
                 .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("Entity with id [3] not found.");
+                .hasMessage("Entity with id [3] was not found.");
     }
 
     @Test

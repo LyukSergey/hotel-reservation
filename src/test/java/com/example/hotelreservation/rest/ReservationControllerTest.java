@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import javax.persistence.EntityNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -61,7 +62,42 @@ class ReservationControllerTest {
     }
 
     @Test
-    void test_createReservations() throws Exception {
+    public void test_getReservationById() throws Exception {
+        //GIVEN
+        Reservation expectedReservation = initReservation2();
+        when(service.findById(2L)).thenReturn(expectedReservation);
+
+        //WHEN
+        ResultActions resultActions = mockMvc.perform(get("/reservations/2"))
+                .andExpect(status().isOk());
+
+        //THEN
+        MvcResult result = resultActions.andReturn();
+        String contentAsString = result.getResponse().getContentAsString();
+
+        Reservation resultedReservation = objectMapper.readValue(contentAsString, Reservation.class);
+        assertThat(resultedReservation).isNotNull();
+        assertThat(resultedReservation).isEqualTo(expectedReservation);
+    }
+
+    @Test
+    public void test_getReservationById_exception() throws Exception {
+        //GIVEN
+        String expectedMessage = "Entity with id [3] was not found";
+        when(service.findById(3L)).thenThrow(new EntityNotFoundException(expectedMessage));
+        //WHEN
+        MvcResult mvcResult = mockMvc.perform(get("/reservations/3"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        //THEN
+        Exception resolvedException = mvcResult.getResolvedException();
+        assertThat(resolvedException.getMessage()).isNotNull();
+        assertThat(resolvedException.getMessage()).isEqualTo(expectedMessage);
+    }
+
+    @Test
+    void test_createReservation() throws Exception {
         //GIVEN
         Reservation requestBody = initReservation1();
 
@@ -91,7 +127,7 @@ class ReservationControllerTest {
     }
 
     @Test
-    void test_updateReservations() throws Exception {
+    void test_updateReservation() throws Exception {
         //GIVEN
         Reservation requestBody = initReservation1();
         requestBody.setRoomNumber(22);
@@ -124,7 +160,7 @@ class ReservationControllerTest {
 
 
     @Test
-    void test_deleteReservations() throws Exception {
+    void test_deleteReservation() throws Exception {
         //GIVEN
         //WHEN
         ResultActions resultActions = mockMvc.perform(

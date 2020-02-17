@@ -28,7 +28,7 @@ public class ReservationService {
 
     public Reservation findById(Long id) {
         return reservationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
-                String.format("Entity with id [%s] not found.", id)
+                String.format("Entity with id [%s] was not found.", id)
         ));
     }
 

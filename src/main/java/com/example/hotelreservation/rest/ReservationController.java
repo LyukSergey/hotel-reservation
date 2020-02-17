@@ -29,22 +29,26 @@ public class ReservationController {
 
     @GetMapping(path = "/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
-        List<Reservation> reservations = reservationService.findAll();
-        return ResponseEntity.of(Optional.ofNullable(reservations));
+        return ResponseEntity.of(Optional.ofNullable(reservationService.findAll()));
+    }
+
+    @GetMapping(path = "/reservations/{id}")
+    public ResponseEntity<Reservation> getReservationById(@PathVariable Long id) {
+        return ResponseEntity.of(Optional.ofNullable(reservationService.findById(id)));
     }
 
     @PostMapping(path = "/reservations")
-    public ResponseEntity<Reservation> createReservations(@RequestBody Reservation reservation) {
+    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
         return ResponseEntity.of(Optional.ofNullable(reservationService.saveOrUpdate(reservation)));
     }
 
     @PutMapping(path = "/reservations")
-    public ResponseEntity<Reservation> updateReservations(@RequestBody Reservation data) {
+    public ResponseEntity<Reservation> updateReservation(@RequestBody Reservation data) {
         return ResponseEntity.of(Optional.ofNullable(reservationService.saveOrUpdate(data)));
     }
 
     @DeleteMapping(path = "/reservations/{id}")
-    public void deleteReservations(@PathVariable Long id) {
+    public void deleteReservation(@PathVariable Long id) {
         reservationService.deleteById(id);
     }
 
