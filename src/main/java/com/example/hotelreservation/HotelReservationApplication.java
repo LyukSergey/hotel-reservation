@@ -11,11 +11,6 @@ import java.util.Arrays;
 @RestController
 public class HotelReservationApplication {
 
-    @RequestMapping("/")
-    public String home() {
-        return "Hello Docker World";
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(HotelReservationApplication.class, args);
     }

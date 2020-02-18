@@ -1,5 +1,4 @@
 ##Docker's commands:
-docker run -p 8080:8080 -t hotel-reservation:0.0.1-SNAPSHOT
 docker image rm [IMAGE_ID] - removing
 docker image  rmi -f  [IMAGE_ID] - force removing
 docker stop [CONTAINER_ID] - stop container
@@ -9,6 +8,7 @@ docker-compose down - stop all images from docker-compose
 docker-compose build - build images from docker compose
 docker-compose up - run images
 docker-compose up --force-recreate - run images with updating volumes
+docker image push [DOCKER_USER_ID]/hotel-reservation
 
 ##Test URIs
 #GET All
