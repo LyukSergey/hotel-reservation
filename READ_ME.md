@@ -9,6 +9,8 @@ docker-compose build - build images from docker compose
 docker-compose up - run images
 docker-compose up --force-recreate - run images with updating volumes
 docker image push [DOCKER_USER_ID]/hotel-reservation
+docker images --filter "dangling=true" - show un usage images
+docker rmi $(docker images -f "dangling=true" -q) - remove all un usage images
 
 ##Test URIs
 #GET All
