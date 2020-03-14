@@ -26,6 +26,4 @@ http://localhost:8080/reservations/{id}
 #Find reservation with date range
 http://localhost:8080/reservations/between?startDate=2020-02-11&endDate=2020-02-21
 
-#test new branch
-
-#test new branch 2
+#test 1
