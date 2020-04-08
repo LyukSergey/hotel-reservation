@@ -1,6 +1,10 @@
 package com.example.hotelreservation.config;
 
+import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.model.Bind;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.flywaydb.core.Flyway;
@@ -15,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.function.Consumer;
 
 @TestConfiguration
 @EnableJpaRepositories(basePackages = {"com.example.hotelreservation.db"})
@@ -27,12 +32,10 @@ public class BaseIntTest {
         postgreSQLContainer.withUsername("postgres");
         postgreSQLContainer.withPassword("admin");
         postgreSQLContainer.withExposedPorts();
-        ArrayList<String> portBindings = new ArrayList<String>();
-        portBindings.add("5432");
-        postgreSQLContainer.setPortBindings(portBindings);
-        ArrayList<Integer> exposedPorts = new ArrayList<>();
-        exposedPorts.add(5432);
-        postgreSQLContainer.setExposedPorts(exposedPorts);
+        int hostPort = 5432;
+        int containerExposedPort = 5432;
+        Consumer<CreateContainerCmd> cmd = e -> e.withPortBindings(new PortBinding(Ports.Binding.bindPort(hostPort), new ExposedPort(containerExposedPort)));
+        postgreSQLContainer.withCreateContainerCmdModifier(cmd);
         postgreSQLContainer.start();
         return postgreSQLContainer;
     }
@@ -48,32 +51,32 @@ public class BaseIntTest {
     }
 
     @Bean
-    public Flyway flyway(DataSource dataSource){
+    public Flyway flyway(DataSource dataSource) {
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
         return flyway;
     }
 
     @Bean
-    public FlywayMigrationInitializer flywayMigrationInitializer(Flyway flyway){
+    public FlywayMigrationInitializer flywayMigrationInitializer(Flyway flyway) {
         return new FlywayMigrationInitializer(flyway, null);
     }
 
-   /* @Bean
-    public SpringLiquibase springLiquibase(DataSource dataSource) throws SQLException {
-        // here we create the schema first if not yet created before
-        tryToCreateSchema(dataSource);
-        SpringLiquibase liquibase = new SpringLiquibase();
-        // we want to drop the datasbe if it was created before to have immutable version
-        liquibase.setDropFirst(true);
-        liquibase.setDataSource(dataSource);
-        //you set the schema name which will be used into ur integration test
-        liquibase.setDefaultSchema("test");
-        // the classpath reference for your liquibase changlog
-        liquibase.setChangeLog("classpath:/db/changelog/changes/v0001.sql");
-        return liquibase;
-    }
-*/
+    /* @Bean
+     public SpringLiquibase springLiquibase(DataSource dataSource) throws SQLException {
+         // here we create the schema first if not yet created before
+         tryToCreateSchema(dataSource);
+         SpringLiquibase liquibase = new SpringLiquibase();
+         // we want to drop the datasbe if it was created before to have immutable version
+         liquibase.setDropFirst(true);
+         liquibase.setDataSource(dataSource);
+         //you set the schema name which will be used into ur integration test
+         liquibase.setDefaultSchema("test");
+         // the classpath reference for your liquibase changlog
+         liquibase.setChangeLog("classpath:/db/changelog/changes/v0001.sql");
+         return liquibase;
+     }
+ */
     private void tryToCreateSchema(DataSource dataSource) throws SQLException {
         String CREATE_SCHEMA_QUERY = "CREATE SCHEMA IF NOT EXISTS test";
         dataSource.getConnection().createStatement().execute(CREATE_SCHEMA_QUERY);
